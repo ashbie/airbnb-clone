@@ -1,13 +1,16 @@
 import express from "express";
+import { ApolloServer } from "apollo-server-express";
+import { schema } from "./graphql";
+
+
 const app = express();
 const port = 3000;
 
-const one: number = 1;
-const two: number = 2;
+const server = new ApolloServer({ schema });
+server.start().then(() => {
+    server.applyMiddleware({app, path: '/api'});
 
+    app.listen(port);
 
-app.get("/", (req, res) => res.send(`1 + 2 = ${one + two}`));
-
-app.listen(port, function () {
-    console.log(`[app]: http://localhost:${port}`);
+    console.log(`[app]: http://localhost:${port}/api`);
 });
