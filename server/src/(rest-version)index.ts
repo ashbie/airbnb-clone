@@ -1,4 +1,4 @@
-import express from "express";
+/*import express from "express";
 import {listings} from "./listings";
 import bodyParser from "body-parser";
 
@@ -6,6 +6,7 @@ import bodyParser from "body-parser";
 const app = express();
 const port = 3000;
 app.use(bodyParser.json());
+*/
 
 /*
 const one = 1;
@@ -14,7 +15,7 @@ const two = 2;
 
 app.get("/", (_req, res) => res.send(`1 + 2 = ${one + two}`));
 */
-
+/*
 app.get("/listings", (_req, res) => {
     return res.send(listings);
 });
@@ -33,3 +34,4 @@ app.post("/delete-listing", (req, res) =>{
 app.listen(port);
 
 console.log(`[app]: http://localhost:${port}`);
+*/

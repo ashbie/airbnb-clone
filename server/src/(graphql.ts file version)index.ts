@@ -1,12 +1,12 @@
-import express from "express";
+/*import express from "express";
 import { ApolloServer } from "apollo-server-express";
-import { typeDefs, resolvers } from "./graphql";
+import { schema } from "./graphql";
 
 
 const app = express();
 const port = 3000;
 
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({ schema });
 server.start().then(() => {
     server.applyMiddleware({app, path: '/api'});
 
@@ -14,3 +14,4 @@ server.start().then(() => {
 
     console.log(`[app]: http://localhost:${port}/api`);
 });
+*/
