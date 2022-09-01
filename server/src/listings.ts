@@ -1,6 +1,6 @@
 interface Listing  {
     id: string;
-    title: string,
+    title: string;
     image: string;
     address: string;
     price: number;
