@@ -4,6 +4,9 @@ node_modules
 #production
 build/
 
+#temporary files  e.g. the seed script
+temp/
+
 #misc
 .DS_Store
 
