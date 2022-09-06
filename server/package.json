@@ -26,7 +26,7 @@
         "typescript": "^4.7.4"
     },
     "scripts": {
-        "start": "nodemon src/index.ts",
+        "start": "nodemon ./src/index.ts",
         "build": "tsc -p ./",
         "seed": "ts-node ./temp/seed.ts"
     }
