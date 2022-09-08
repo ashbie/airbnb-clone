@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
 import { server, useQuery } from "../../lib"
-import { Listing, ListingData, DeleteListingData, DeleteListingVariables } from './types';
+import { ListingData, DeleteListingData, DeleteListingVariables } from './types';
 
 const LISTINGS = `
     query Listings{
@@ -31,7 +30,8 @@ interface Props{
 }
 
 export const Listings = (props: Props) => {
-    const { data } = useQuery<ListingData>(LISTINGS);
+    const { data, refetch } = useQuery<ListingData>(LISTINGS);
+
 
     const DeleteListing = async ( id: string) => {
         await server.fetch<DeleteListingData, DeleteListingVariables>({ 
@@ -40,6 +40,8 @@ export const Listings = (props: Props) => {
                 id
             }
         });
+
+        refetch();
         
     }
 
