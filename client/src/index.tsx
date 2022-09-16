@@ -4,6 +4,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
 import { Listings  } from './sections';
+import "./styles/index.css";
 
 const client = new ApolloClient({ uri: "/api" });
 
@@ -13,7 +14,7 @@ const root = createRoot(
 root.render(
   <ApolloProvider client={ client }>
   
-    <Listings title="JourParJour Listings"/>
+    <Listings title="Jour-par-Jour Listings"/>
   
   </ApolloProvider>
 );

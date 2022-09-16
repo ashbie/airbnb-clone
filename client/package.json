@@ -12,6 +12,7 @@
     "@types/node": "^16.11.56",
     "@types/react": "^18.0.18",
     "@types/react-dom": "^18.0.6",
+    "antd": "^4.23.1",
     "apollo-boost": "^0.4.9",
     "graphql": "^15.8.0",
     "react": "^18.2.0",

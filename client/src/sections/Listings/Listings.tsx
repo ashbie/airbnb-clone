@@ -1,7 +1,11 @@
-import { useQuery, useMutation } from "react-apollo"
+import { useQuery, useMutation } from "react-apollo";
+import { Avatar, Alert, List, Button, Spin } from "antd";
 import { gql } from "apollo-boost";
-import { Listings as ListingData } from "./__generated__/Listings"
+import { Listings as ListingData } from "./__generated__/Listings";
 import { Delete_a_listing as DeleteListingData, Delete_a_listingVariables as DeleteListingVariables } from "./__generated__/Delete_a_listing";
+import "./styles/Listings.css";
+import { ListingsSkeleton } from "./components";
+
 
 const LISTINGS = gql`
     query Listings{
@@ -45,27 +49,45 @@ export const Listings = (props: Props) => {
 
     const listings = data ? data.listings : null;
 
-    const theListingsList = listings?<ul> {
-        listings.map((listing) => {
-        return <li key={listing.id}>{listing.title} <button onClick={ () => handleDeleteListing(listing.id) }>Delete</button></li>
-    })
-    }</ul>: null ;
+    const theListingsList = listings?(
+    <List
+        itemLayout="horizontal"
+        dataSource={listings}
+        renderItem={(listing) => (
+            <List.Item actions={[ <Button type="primary" onClick={()=>handleDeleteListing(listing.id)}>Supprimer</Button>]}>
+                <List.Item.Meta
+                avatar={<Avatar src={listing.image} shape="square" size={48} />}
+                title={listing.title}
+                description={listing.address}
+                />
+            </List.Item>
+        )}
+    />
+    ) : null ;
+
 
     if(loading){
-        return <div><h1>Loading...</h1></div>;
+        return <div className="listing">
+            <ListingsSkeleton title="Jour-par-Jour Listings" />
+        </div>;
     }
 
     if(error){
-        return <div><h1>Uh oh! Something went wrong - Please try again later! <br/>:(</h1></div>;
-    }
+        return <div className="listing">
+        <ListingsSkeleton title="Jour-par-Jour Listings"  error/>
+    </div>;
+}
 
-    const deleteListingLoadingMessage = deleteListingLoading ? <h2>Deletion in progress...</h2> : null;
     
-    const deleteListingErrorMessage = deleteListingError ? <h2>Uh oh! Something went wrong with deleting - please try again later <br/>:(</h2> : null;
-    return <div>
+    const deleteListingErrorMessage = deleteListingError ? (<Alert message="Oh oh! Quelque chose c'est mal passé. Merci d'essayer plus tard! :(" type="error" className="listings-error-method-1"></Alert>) : null;
+    
+    
+    return <div className="listing">
+        <Spin spinning={deleteListingLoading}>
+            { deleteListingErrorMessage }
             <h1>{ props.title }</h1>
             { theListingsList }
-            { deleteListingErrorMessage}
-            { deleteListingLoadingMessage }
-            </div>;
+            
+        </Spin>
+    </div>;
 }
