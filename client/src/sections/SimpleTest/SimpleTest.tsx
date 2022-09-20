@@ -35,7 +35,7 @@ interface Props{
     title: string;
 }
 
-export const Listings = (props: Props) => {
+export const SimpleTest = (props: Props) => {
     const { data, loading, error, refetch } = useQuery<ListingData>(LISTINGS);
 
     const [deleteListing, { loading: deleteListingLoading, error: deleteListingError }] = useMutation<DeleteListingData, DeleteListingVariables>(DELETE_LISTING);

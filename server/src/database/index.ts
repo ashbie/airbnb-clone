@@ -1,5 +1,5 @@
 import { MongoClient, ServerApiVersion } from "mongodb";
-import { DatabaseCollection } from "../lib/types";
+import { DatabaseCollection, Booking, ProductionListing, User } from "../lib/types";
 
 
 
@@ -13,6 +13,9 @@ export const connectDatabase = async (): Promise<DatabaseCollection> => {
     const db = client.db('main');
 
     return {
-        listings: db.collection('test_listings')
+        listings: db.collection('test_listings'),
+        users: db.collection<User>('users'),
+        productionListings: db.collection<ProductionListing>('production_listings'),
+        bookings: db.collection<Booking>('bookings')
     }
 }

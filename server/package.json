@@ -1,5 +1,5 @@
 {
-    "name": "airbnb-v1-server",
+    "name": "jour-par-jour--server",
     "version": "0.1.0",
     "dependencies": {
         "@graphql-tools/utils": "^8.10.1",
@@ -28,6 +28,8 @@
     "scripts": {
         "start": "nodemon ./src/index.ts",
         "build": "tsc -p ./",
-        "seed": "ts-node ./temp/seed.ts"
+        "sample-seed": "ts-node ./temp/sample-collection.ts",
+        "seed": "ts-node ./temp/seed.ts",
+        "clear": "ts-node ./temp/clear.ts"
     }
 }
