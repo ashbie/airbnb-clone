@@ -16,7 +16,10 @@ export const Google = {
         scope: [
             'https://www.googleapis.com/auth/userinfo.email',
             'https://www.googleapis.com/auth/userinfo.profile'
-          ]
+          ],
+
+          // Enable incremental authorization. Recommended as a best practice.
+          include_granted_scopes: true  
     }),
 
     logIn: async (code: string) => {
