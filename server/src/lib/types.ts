@@ -3,7 +3,7 @@ import { Collection, ObjectId } from "mongodb";
 // ======================================================================
 //                             For the Test
 // ======================================================================
-
+/*
 export interface Listing {
     _id: ObjectId;
     title: string;
@@ -15,10 +15,18 @@ export interface Listing {
     numOfBaths: number;
     rating: number;
 }
-
+*/
 // ======================================================================
 //                          For Production 
 // ======================================================================
+
+export interface Viewer {
+    _id?: string;
+    token?: string;
+    avatar?: string;
+    walletId?: string;
+    didRequest: boolean;
+}
 
 export enum ListingType {
     Apartment = "APARTMENT",
@@ -49,7 +57,7 @@ export interface User{
     listings: ObjectId[];
 }
 
-export interface ProductionListing{
+export interface Listing{
     _id: ObjectId;
     title: string;
     description: string;
@@ -84,8 +92,8 @@ export interface Booking{
 
 
 export interface DatabaseCollection {
-    listings: Collection<Listing>;
+    //listings: Collection<Listing>;
     users: Collection<User>;
-    productionListings: Collection<ProductionListing>;
+    listings: Collection<Listing>;
     bookings: Collection<Booking>;
 }
