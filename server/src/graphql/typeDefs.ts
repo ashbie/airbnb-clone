@@ -2,16 +2,18 @@ import { gql } from "apollo-server-express";
 
 export const typeDefs = gql`
 
-input LogInInput {
-    code: String!
-}
+
 
 type Viewer{
-    id: String
+    id: ID
     token: String
     avatar: String
     hasWallet: Boolean
     didRequest: Boolean!
+}
+
+input LogInInput {
+    code: String!
 }
 
 type Query{
@@ -19,8 +21,8 @@ type Query{
 }
 
 type Mutation{
-    logIn(input: LogInInput ): String!
-    logOut: String!
+    logIn(input: LogInInput ): Viewer!
+    logOut: Viewer!
 }
 
 `;

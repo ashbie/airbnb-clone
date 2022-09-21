@@ -4,7 +4,8 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { createRoot } from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
-import { Home, Host, Listing, Listings, NotFound, User, SimpleTest  } from './sections';
+import { Home, Host, Listing, Listings, NotFound, User, Login  } from './sections';
+import { Layout } from "antd";
 import "./styles/index.css";
 
 const client = new ApolloClient({ uri: "/api" });
@@ -12,6 +13,7 @@ const client = new ApolloClient({ uri: "/api" });
 const App = () => {
   return(
     <BrowserRouter>
+    <Layout id="app">
       <Routes>
         <Route path="/"  element={<Home/>} />
         <Route path="/host"  element={<Host/>} />
@@ -19,9 +21,10 @@ const App = () => {
         <Route path="/listings" element={<Listings/>} />
         <Route path="/listings/:location"  element={<Listings/>} />
         <Route path="/user/:id"  element={<User/>} />
-        <Route path="/simpletest"  element={<SimpleTest  title='Un test facile'/>} />
+        <Route path="/login"  element={<Login  />} />
         <Route  path="*" element={<NotFound/>} />
       </Routes>
+    </Layout>
     </BrowserRouter>
   );
 }
