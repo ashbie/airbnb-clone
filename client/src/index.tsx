@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { createRoot } from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
-import { Home, Host, Listing, Listings, NotFound, User, Login  } from './sections';
-import { Layout } from "antd";
+import { AppHeader, Home, Host, Listing, Listings, NotFound, User, Login  } from './sections';
+import { Layout, Affix } from "antd";
 import { Viewer } from "./lib/types";
 import "./styles/index.css";
 
@@ -21,10 +21,13 @@ const initialViewer: Viewer = {
 
 const App = () => {
   const [viewer, setViewer] = useState<Viewer>(initialViewer);
-  console.log(viewer);
+
   return(
     <BrowserRouter>
     <Layout id="app">
+      <Affix offsetTop={0}  className="app__affix-header">
+      <AppHeader viewer={viewer}  setViewer={setViewer} ></AppHeader>
+      </Affix>
       <Routes>
         <Route path="/"  element={<Home/>} />
         <Route path="/host"  element={<Host/>} />
