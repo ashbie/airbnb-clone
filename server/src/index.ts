@@ -5,7 +5,7 @@ import express, { Application } from "express";
 import { ApolloServer } from "apollo-server-express";
 import { connectDatabase } from "./database/index";
 import { typeDefs, resolvers } from "./graphql";
-
+import cookieParser from 'cookie-parser';
 
 
 
@@ -13,7 +13,10 @@ import { typeDefs, resolvers } from "./graphql";
 
 const mount = async (app: Application) => {
     const db = await connectDatabase();
-    const server = new ApolloServer({ typeDefs, resolvers, context: () => ({ db }) });
+
+    app.use(cookieParser(process.env.SECRET));
+
+    const server = new ApolloServer({ typeDefs, resolvers, context: ({ req, res}) => ({ db, req, res }) });
     server.start().then(async () => {
 
         server.applyMiddleware({app, path: '/api'});
