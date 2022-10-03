@@ -55,6 +55,7 @@ export interface User{
     income: number;
     bookings: ObjectId[];
     listings: ObjectId[];
+    authorized?: boolean;
 }
 
 export interface Listing{
