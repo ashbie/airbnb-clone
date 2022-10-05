@@ -36,7 +36,7 @@ export const UserProfile = ({ user, viewerIsUser }: Props) => {
           </div>
         </Fragment>
       ) : null;
-      //console.log(`user avatar:${user.avatar}`);
+      
       return (
         <div className="user-profile">
           <Card className="user-profile__card">
