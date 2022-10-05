@@ -1,6 +1,6 @@
 /*
 ================================================
-This is from the demo: Part 1  -- Not for production
+This file is from the demo: Part 1  -- Not for production
 ================================================
 */
 import { IResolvers } from "@graphql-tools/utils";

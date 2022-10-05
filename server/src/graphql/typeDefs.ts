@@ -2,7 +2,7 @@ import { gql } from "apollo-server-express";
 
 export const typeDefs = gql`
 
-type Booking {
+  type Booking {
     id: ID!
     listing: Listing!
     tenant: User!
@@ -67,6 +67,7 @@ input LogInInput {
 type Query{
     authUrl: String!
     user(id: ID!): User!
+    listing(id: ID!): Listing!
 }
 
 type Mutation{
