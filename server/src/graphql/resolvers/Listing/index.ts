@@ -1,6 +1,6 @@
 import { IResolvers } from "@graphql-tools/utils";
 import {  DatabaseCollection, Listing, User } from "../../../lib/types";
-import { ListingArgs, ListingBookingsData, ListingBookingsArgs } from "./types"
+import { ListingArgs, ListingBookingsData, ListingBookingsArgs, ListingsArgs, ListingsData, ListingsFilter } from "./types"
 import {  authorize } from "../../../lib/utils";
 import { Request } from "express";
 import { ObjectId } from "mongodb";
@@ -25,6 +25,36 @@ export const listingResolvers: IResolvers = {
         throw new Error(`Échec de la requête de l'annonce: ${error}`);
       }
       
+    },
+    listings: async (_root: undefined, { filter, limit, page }: ListingsArgs, { db }: { db: DatabaseCollection }) => {
+      try {
+        const data: ListingsData = {
+        total: 0,
+        result: []
+        };
+
+        let cursor = await db.listings.find({});
+
+        data.total = await cursor.count();
+
+        if( filter && filter === ListingsFilter.PRICE_LOW_TO_HIGH ) {
+          cursor = cursor.sort({ price: 1 });
+        }
+
+        if( filter && filter === ListingsFilter.PRICE_HIGH_TO_LOW ) {
+          cursor = cursor.sort({ price: -1 });
+        }
+
+        cursor = cursor.skip(page > 0 ? (page - 1) * limit : 0);
+        cursor = cursor.limit(limit);
+
+        
+        data.result = await cursor.toArray();
+
+        return data;
+    } catch (error) {
+        throw new Error(`Échec de la requête des listes  ( Failed to query listings ): ${error}`);
+    }
     }
   },
   Listing: {
