@@ -1,6 +1,7 @@
 import { IResolvers } from "@graphql-tools/utils";
+import {  Google } from "../../../lib/api";
 import {  DatabaseCollection, Listing, User } from "../../../lib/types";
-import { ListingArgs, ListingBookingsData, ListingBookingsArgs, ListingsArgs, ListingsData, ListingsFilter } from "./types"
+import { ListingArgs, ListingBookingsData, ListingBookingsArgs, ListingsArgs, ListingsData, ListingsFilter, ListingsQuery } from "./types"
 import {  authorize } from "../../../lib/utils";
 import { Request } from "express";
 import { ObjectId } from "mongodb";
@@ -26,14 +27,33 @@ export const listingResolvers: IResolvers = {
       }
       
     },
-    listings: async (_root: undefined, { filter, limit, page }: ListingsArgs, { db }: { db: DatabaseCollection }) => {
+    listings: async (_root: undefined, { location, filter, limit, page }: ListingsArgs, { db }: { db: DatabaseCollection }) => {
       try {
+        const query: ListingsQuery = {};
         const data: ListingsData = {
-        total: 0,
-        result: []
+          region: null,
+          total: 0,
+          result: []
         };
 
-        let cursor = await db.listings.find({});
+        if(location) {
+          const { country, admin, city } = await Google.geocode(location);
+
+          if (city) query.city = city;
+          if (admin) query.admin = admin;
+          if (country) {
+            query.country = country;
+          } else {
+            throw new Error("Aucun pays trouvé");
+          }
+
+          const cityText = city ? `${city}, ` : "";
+          const adminText = admin ? `${admin}, ` : "";
+          data.region = `${cityText}${adminText}${country}`;
+          console.log(`\n\t\t data.region=${data.region} \n\t\t query.country=${query.country} \n \t\t query=${query} \n  ` );
+        }
+
+        let cursor = location? await db.listings.find({...query}) : await db.listings.find({});
 
         data.total = await cursor.count();
 
