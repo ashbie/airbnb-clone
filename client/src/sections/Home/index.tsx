@@ -18,7 +18,7 @@ import cancunImage from "./assets/cancun.jpg";
 const { Content } = Layout;
 const { Paragraph, Title } = Typography;
 
-const PAGE_LIMIT = 4;
+const PAGE_LIMIT = 8;
 const PAGE_NUMBER = 1;
 
 export const Home = () => {

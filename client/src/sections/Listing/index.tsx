@@ -27,9 +27,9 @@ export const Listing = () => {
   const [checkOutDate, setCheckOutDate] = useState<Moment | null>(null);
 
   let { id } = useParams();
-    if ( id === undefined){
-        id = "";
-    }
+  if ( id === undefined){
+      id = "";
+  }
   const { loading, data, error } = useQuery<ListingData, ListingVariables>(LISTING, {
     variables: {
       id: id,

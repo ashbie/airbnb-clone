@@ -21,7 +21,10 @@ export const HomeListings = ({ title, listings }: Props) => {
           gutter: 8,
           xs: 1,
           sm: 2,
-          lg: 4
+          md:3,
+          lg: 3,
+          xl:4,
+          xxl: 4
         }}
         dataSource={listings}
         renderItem={listing => (
