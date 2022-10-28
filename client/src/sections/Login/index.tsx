@@ -19,12 +19,13 @@ import googleLogo from "./assets/google_logo.jpg";
 
 interface Props {
   setViewer: (viewer: Viewer) => void;
+  viewer: Viewer;
 }
 
 const { Content } = Layout;
 const { Text, Title } = Typography;
 
-export const Login = ({ setViewer }: Props) => {
+export const Login = ({ viewer, setViewer }: Props) => {
   const client = useApolloClient();
 
   const [
@@ -66,6 +67,15 @@ export const Login = ({ setViewer }: Props) => {
     }
   };
 
+  /******************************** */
+  // This << sneak >> parameter gets added in the login url ONLY when a viewer manually redirects themselves to the << stripe >> component/url. This is a security measure.
+  // So I look for << sneak >> and if it does exist, redirect the viewer to their user page if that user is logged in. If not logged in, this is the login page/component, so the viewer will see this login page/component
+  const sneak = new URL(window.location.href).searchParams.get("sneak");
+  if(sneak){
+    if(viewer.id){ return <Navigate to={`/user/${viewer.id}`}/>} ;
+  } 
+  
+  /******************************** */
   if (logInLoading) {
     return (
       <Content className="log-in">

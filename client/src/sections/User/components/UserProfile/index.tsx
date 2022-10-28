@@ -10,7 +10,12 @@ interface Props {
 
 const { Paragraph, Text, Title } = Typography;
 
+const stripeAuthUrl = `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${process.env.REACT_APP_S_CLIENT_ID}&scope=read_write`;
+
 export const UserProfile = ({ user, viewerIsUser }: Props) => {
+  const redirectToStripe = () => {
+    window.location.href = stripeAuthUrl;
+  };
     const additionalDetailsSection = viewerIsUser ? (
         <Fragment>
           <Divider />
@@ -19,7 +24,7 @@ export const UserProfile = ({ user, viewerIsUser }: Props) => {
             <Paragraph>
             Intéressé à devenir un hôte Jour-par-Jour ? Enregistrez-vous avec votre compte Stripe !
             </Paragraph>
-            <Button type="primary" className="user-profile__details-cta">
+            <Button type="primary" className="user-profile__details-cta" onClick={redirectToStripe}>
             Connectez-vous avec Stripe
             </Button>
             <Paragraph type="secondary">

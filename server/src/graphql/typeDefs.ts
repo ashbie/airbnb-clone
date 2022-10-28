@@ -72,6 +72,10 @@ input LogInInput {
     code: String!
 }
 
+input ConnectStripeInput {
+  code: String!
+}
+
 type Query{
     authUrl: String!
     user(id: ID!): User!
@@ -79,9 +83,11 @@ type Query{
     listings(location:String, filter:ListingsFilter!, limit:Int!, page:Int!): Listings!
 }
 
-type Mutation{
+type Mutation {
     logIn(input: LogInInput ): Viewer!
     logOut: Viewer!
+    connectStripe(input: ConnectStripeInput!): Viewer!
+    disconnectStripe:Viewer!
 }
 
 `;

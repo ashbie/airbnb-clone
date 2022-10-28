@@ -41,6 +41,11 @@ export const User = ({ viewer }: Props ) => {
     }
   });
 
+  const stripeError = new URL(window.location.href).searchParams.get("stripe_error");
+  const stripeErrorBanner = stripeError ? (
+    <ErrorBanner description="Nous avons eu un problème de connexion avec Stripe. Veuillez réessayer bientôt."/>
+  ): null;
+
   if (loading) {
     return (
       <Content className="user">
@@ -89,6 +94,7 @@ export const User = ({ viewer }: Props ) => {
 
   return (
     <Content className="user">
+      {stripeErrorBanner}
       <Row gutter={12} justify="space-between">
         <Col xs={24}>{userProfileElement}</Col>
         <Col xs={24}>

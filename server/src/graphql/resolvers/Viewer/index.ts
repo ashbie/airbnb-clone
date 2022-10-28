@@ -1,9 +1,10 @@
 import crypto from "crypto";
 import { Request, Response } from "express"
 import { IResolvers } from "@graphql-tools/utils";
-import { Google } from "../../../lib/api";
+import { Google, Stripe } from "../../../lib/api";
 import { DatabaseCollection, Viewer, User } from "../../../lib/types";
-import { LogInArgs } from "./types";
+import { LogInArgs, ConnectStripeArgs } from "./types";
+import { authorize } from "../../../lib/utils";
 
 const cookieOptions = {
   httpOnly: true,
@@ -124,7 +125,7 @@ export const viewerResolvers: IResolvers = {
             try {
                 return Google.authUrl;
             } catch (error) {
-                throw new Error(`Failed to query Google Auth URL: ${error}`);
+                throw new Error(`Échec de la requête de l'URL d'authentification Google : ${error}`);
             }
         }
     },
@@ -151,15 +152,91 @@ export const viewerResolvers: IResolvers = {
             throw new Error(`Failed to log in: ${error}`);
            }
         },
-        logOut: (_root: undefined,_args: Record<string, never>,{ res }: { res: Response }): Viewer => {
+        logOut: (_root: undefined, _args: Record<string, never>, { res }: { res: Response }): Viewer => {
           // I'm using ( ..., _args: Record<string, never>, ... ) to mean empty object because if I use ( ..., _args: {}, ... ) I get a tyescript-eslint warning
-            try {
-              res.clearCookie("viewer", cookieOptions);
-                return { didRequest: true };
-              } catch (error) {
-                throw new Error(`Failed to log out: ${error}`);
-              }
+          try {
+            res.clearCookie("viewer", cookieOptions);
+            return { didRequest: true };
+          } catch (error) {
+            throw new Error(`Failed to log out: ${error}`);
+          }
+        },
+        connectStripe: async (
+          _root: undefined,
+          { input }: ConnectStripeArgs,
+          { db, req }: { db: DatabaseCollection; req: Request }
+        ): Promise<Viewer> => {
+          try {
+            const { code } = input;
+    
+            let viewer = await authorize(db, req);
+            if (!viewer) {
+              throw new Error("spectateur( i.e. viewer ) introuvable");
+            }
+    
+            const wallet = await Stripe.connect(code);
+            if (!wallet) {
+              throw new Error("Erreur d'accorder venant de Stripe");
+            }
+    
+            const updateRes = await db.users.findOneAndUpdate(
+              { _id: viewer._id },
+              { $set: { walletId: wallet.stripe_user_id } },
+              {returnDocument: "after"}
+            );
+    
+            if (!updateRes.value) {
+              throw new Error("la visionneuse( i.e. viewer ) n'a pas pu être mise à jour");
+            }
+    
+            viewer = updateRes.value;
+    
+            return {
+              _id: viewer._id,
+              token: viewer.token,
+              avatar: viewer.avatar,
+              walletId: viewer.walletId,
+              didRequest: true
+            };
+          } catch (error) {
+            throw new Error(`Échec de la connexion avec Stripe: ${error}`);
+          }
+        },
+        disconnectStripe: async (
+          _root: undefined,
+          _args: Record<string, never>,
+          { db, req }: { db: DatabaseCollection; req: Request }
+        ): Promise<Viewer> => {
+          try {
+            let viewer = await authorize(db, req);
+            if (!viewer) {
+              throw new Error("spectateur( i.e. viewer ) introuvable");
+            }
+    
+            const updateRes = await db.users.findOneAndUpdate(
+              { _id: viewer._id },
+              { $set: { walletId: undefined } },
+              {returnDocument: "after"}
+            );
+    
+            if (!updateRes.value) {
+              throw new Error("la visionneuse( i.e. viewer ) n'a pas pu être mise à jour");
+            }
+    
+            viewer = updateRes.value;
+    
+            return {
+              _id: viewer._id,
+              token: viewer.token,
+              avatar: viewer.avatar,
+              walletId: viewer.walletId,
+              didRequest: true
+            };
+          } catch (error) {
+            throw new Error(`Échec de la connexion avec Stripe: ${error}`);
+          }
         }
+
     },
     Viewer: {
         id: (viewer: Viewer): string | undefined => {

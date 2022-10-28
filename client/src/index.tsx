@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { createRoot } from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
-import { AppHeader, Home, Host, Listing, Listings, NotFound, User, Login  } from './sections';
+import { AppHeader, Home, Host, Listing, Listings, NotFound, User, Login, Stripe } from './sections';
 import { Layout, Affix, Spin } from "antd";
 import { Viewer } from "./lib/types";
 import { AppHeaderSkeleton, ErrorBanner } from "./lib/components"
@@ -83,7 +83,8 @@ const App = () => {
         <Route path="/listings" element={<Listings/>} />
         <Route path="/listings/:location"  element={<Listings/>} />
         <Route path="/user/:id"  element={<User  viewer={viewer}/>} />
-        <Route path="/login"  element={<Login setViewer={setViewer} />} />
+        <Route path="/login"  element={<Login viewer={viewer} setViewer={setViewer} />} />
+        <Route path="/stripe"  element={<Stripe viewer={viewer} setViewer={setViewer} />} />
         <Route  path="*" element={<NotFound/>} />
       </Routes>
     </Layout>
