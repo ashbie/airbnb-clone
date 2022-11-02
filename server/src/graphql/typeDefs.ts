@@ -76,18 +76,29 @@ input ConnectStripeInput {
   code: String!
 }
 
+input HostListingInput {
+  title: String!
+  description: String!
+  image: String!
+  type: ListingType!
+  address: String!
+  price: Int!
+  numOfGuests: Int!
+}
+
 type Query{
-    authUrl: String!
-    user(id: ID!): User!
-    listing(id: ID!): Listing!
-    listings(location:String, filter:ListingsFilter!, limit:Int!, page:Int!): Listings!
+  authUrl: String!
+  user(id: ID!): User!
+  listing(id: ID!): Listing!
+  listings(location:String, filter:ListingsFilter!, limit:Int!, page:Int!): Listings!
 }
 
 type Mutation {
-    logIn(input: LogInInput ): Viewer!
-    logOut: Viewer!
-    connectStripe(input: ConnectStripeInput!): Viewer!
-    disconnectStripe:Viewer!
+  logIn(input: LogInInput ): Viewer!
+  logOut: Viewer!
+  connectStripe(input: ConnectStripeInput!): Viewer!
+  disconnectStripe:Viewer!
+  hostListing(input: HostListingInput!): Listing!
 }
 
 `;

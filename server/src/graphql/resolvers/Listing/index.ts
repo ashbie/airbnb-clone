@@ -1,11 +1,23 @@
 import { IResolvers } from "@graphql-tools/utils";
 import {  Google } from "../../../lib/api";
-import {  DatabaseCollection, Listing, User } from "../../../lib/types";
-import { ListingArgs, ListingBookingsData, ListingBookingsArgs, ListingsArgs, ListingsData, ListingsFilter, ListingsQuery } from "./types"
+import {  DatabaseCollection, Listing, User, ListingType } from "../../../lib/types";
+import { ListingArgs, ListingBookingsData, ListingBookingsArgs, ListingsArgs, ListingsData, ListingsFilter, ListingsQuery, HostListingArgs, HostListingInput } from "./types"
 import {  authorize } from "../../../lib/utils";
 import { Request } from "express";
 import { ObjectId } from "mongodb";
 
+const verifyHostListingInput = ({title, description, type, price}: HostListingInput) => {
+  if (title.length > 100) { throw new Error("Le titre de l'annonce doit comporter moins de 100 caractères"); }
+  if (description.length > 5000) {
+    throw new Error("la description de l'annonce doit comporter moins de 5000 caractères");
+  }
+  if (type !== ListingType.Apartment && type !== ListingType.House) {
+    throw new Error("listing type must be either an apartment or house");
+  }
+  if (price < 0) {
+    throw new Error("price must be greater than 0");
+  }
+};
 
 export const listingResolvers: IResolvers = {
   Query: {
@@ -75,6 +87,51 @@ export const listingResolvers: IResolvers = {
     } catch (error) {
         throw new Error(`Échec de la requête des listes  ( Failed to query listings ): ${error}`);
     }
+    }
+  },
+  Mutation: {
+    hostListing: async (_root:undefined, { input }: HostListingArgs, { db, req }: { db: DatabaseCollection; req: Request }): Promise<Listing> => {
+      verifyHostListingInput(input);
+
+      const viewer = await authorize(db, req);
+      if (!viewer) {
+        throw new Error("l'utilisateur introuvable");
+      }
+
+      const { country, admin, city } = await Google.geocode(input.address);
+      if (!country || !admin || !city) {
+        throw new Error("entrée d'adresse invalide");
+      }
+
+      const insertResult = await db.listings.insertOne({
+        _id: new ObjectId(),
+        ...input,
+        bookings: [],
+        bookingsIndex: {},
+        country,
+        admin,
+        city,
+        host: viewer._id
+      });
+
+      const insertedListingId: ObjectId = insertResult.insertedId;
+
+      await db.users.updateOne(
+        { _id: viewer._id },
+        { $push: { listings: insertedListingId } }
+      );
+
+      const insertedListing = await db.listings.findOne({
+        _id: insertedListingId
+      });
+
+      if(!insertedListing){
+        throw new Error("Something is wrong with << insertedListingId >> code in the server. Please review! ");
+       }
+
+      return insertedListing;
+
+
     }
   },
   Listing: {
