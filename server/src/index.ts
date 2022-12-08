@@ -7,7 +7,7 @@ import { connectDatabase } from "./database/index";
 import { typeDefs, resolvers } from "./graphql";
 import cookieParser from 'cookie-parser';
 
-
+import { mocky } from "./post"
 
 
 
@@ -21,9 +21,11 @@ const mount = async (app: Application) => {
 
         server.applyMiddleware({app, path: '/api'});
 
+        app.post('/mocky', (_req, res) => { res.send(mocky)});
+
         app.listen(process.env.PORT);
 
-        console.log(`[server-app]: http://localhost:${process.env.PORT}/api`);
+        console.log(`[server-app] http://localhost:${process.env.PORT}/api`);
 
     });
 }

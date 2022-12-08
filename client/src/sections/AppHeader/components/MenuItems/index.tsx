@@ -59,8 +59,8 @@ export const MenuItems = ({viewer, setViewer}: Props) => {
         // Menu is supposed to have a selectable attribute. Check the documentation
         <Menu mode="horizontal"  className="menu">
             <Item key="/host">
-                <Link to="/">
-                    <HomeOutlined type="home"></HomeOutlined>
+                <Link to="/host">
+                    <HomeOutlined ></HomeOutlined>
                     &nbsp;&nbsp;Devenez hôte
                 </Link>
             </Item>
