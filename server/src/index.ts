@@ -9,7 +9,9 @@ import cookieParser from 'cookie-parser';
 
 import { mocky } from "./post"
 
-
+/** The cvDeploy branch has been made so that Ashbie can deploy the project before adding all the features.
+ *  I'm doing this because I want to showcase/display the project on my CV and Portfolio website/webapp.
+ */
 
 const mount = async (app: Application) => {
     const db = await connectDatabase();
