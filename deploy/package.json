@@ -1,0 +1,25 @@
+{
+    "name": "jourparjour-test-deploy",
+    "version": "0.1.0",
+    "private": true,
+    "engines": {
+        "node": "16.17.0"
+    },
+    "dependencies": {
+        "@googlemaps/google-maps-services-js": "^3.3.16",
+        "@graphql-tools/utils": "^8.10.1",
+        "apollo-server-express": "^3.10.2",
+        "body-parser": "^1.20.0",
+        "compression": "^1.7.4",
+        "cookie-parser": "^1.4.6",
+        "express": "^4.18.1",
+        "googleapis": "^107.0.0",
+        "graphql": "^16.6.0",
+        "lodash.merge": "^4.6.2",
+        "mongodb": "^4.9.1",
+        "stripe": "^10.15.0"
+    },
+    "scripts": {
+        "start": "node src/index.js"
+    }
+}
