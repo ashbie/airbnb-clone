@@ -1,9 +1,11 @@
-import dotenv = require('dotenv');
+/*import dotenv = require('dotenv');
 dotenv.config();
+*/
 
 import express, { Application } from "express";
 import { ApolloServer } from "apollo-server-express";
 import { connectDatabase } from "./database/index";
+import compression from "compression";
 import { typeDefs, resolvers } from "./graphql";
 import cookieParser from 'cookie-parser';
 
@@ -15,6 +17,9 @@ const mount = async (app: Application) => {
     const db = await connectDatabase();
 
     app.use(cookieParser(process.env.SECRET));
+    app.use(compression());
+
+    app.get("/*", (_req, res) => res.sendFile(`${__dirname}/client/index.html`));
 
     const server = new ApolloServer({ typeDefs, resolvers, context: ({ req, res}) => ({ db, req, res }) });
     server.start().then(async () => {
